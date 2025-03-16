@@ -1,9 +1,19 @@
-import { Hono } from 'hono'
+import * as Sentry from "@sentry/bun";
+import { Hono } from "hono";
+import { customerRoutes } from "./routes/customer";
 
-const app = new Hono()
+const app = new Hono();
 
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
-})
+app.route("/customers", customerRoutes);
 
-export default app
+Sentry.init({
+  dsn: process.env.DSN,
+});
+
+try {
+  throw new Error("Ikang Syop API");
+} catch (e) {
+  Sentry.captureException(e);
+}
+
+export default app;
