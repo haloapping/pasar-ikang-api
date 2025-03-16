@@ -1,0 +1,9 @@
+model Phone {
+  id          String   @id @default(ulid())
+  phoneNumber String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id])
+}

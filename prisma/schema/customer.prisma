@@ -1,0 +1,14 @@
+model Customer {
+  id        String   @id @default(ulid())
+  username  String   @unique
+  firstName String
+  lastName  String?
+  avatarUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  seafoods  Order[]
+  reviews   Review[]
+  addresses Address[]
+  phones    Phone[]
+}

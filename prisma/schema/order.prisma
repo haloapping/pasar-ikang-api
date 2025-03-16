@@ -1,0 +1,16 @@
+model Order {
+  id        String   @id @default(ulid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id])
+  seafoodId  String
+  seafood    Seafood  @relation(fields: [seafoodId], references: [id])
+  paymentId  String
+  payment    Payment  @relation(fields: [paymentId], references: [id])
+  shippingId String
+  shipping   Shipping @relation(fields: [shippingId], references: [id])
+
+  orderItems OrderItem[]
+}
