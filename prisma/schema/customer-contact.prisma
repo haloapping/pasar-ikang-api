@@ -1,6 +1,11 @@
-model Phone {
+model CustomerContact {
   id          String   @id @default(ulid())
   phoneNumber String
+  city        String
+  state       String
+  postalCode  String
+  country     String
+  detail      String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
