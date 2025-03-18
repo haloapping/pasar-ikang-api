@@ -6,7 +6,7 @@ export const CustomerSchema = z.object({
   firstName: z.string().min(1),
   lastName: z.string().min(1).optional(),
   avatarUrl: z.string().min(1).optional(),
-  createdAt: z.date(),
+  createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
 });
 
