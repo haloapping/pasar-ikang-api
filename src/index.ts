@@ -11,7 +11,7 @@ Sentry.init({
 });
 
 try {
-  throw new Error("Ikang Syop API");
+  throw new Error("Pasar Ikang API started...");
 } catch (e) {
   Sentry.captureException(e);
 }
