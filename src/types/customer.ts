@@ -6,8 +6,8 @@ export const CustomerSchema = z.object({
   firstName: z.string().min(1),
   lastName: z.string().min(1).optional(),
   avatarUrl: z.string().min(1).optional(),
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
+  createdAt: z.string().datetime().optional(),
+  updatedAt: z.string().datetime().optional(),
 });
 
 export type Customer = z.infer<typeof CustomerSchema>;
