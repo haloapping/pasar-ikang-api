@@ -1,7 +1,7 @@
+import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { prismaClient } from "../../prisma/client";
-import { CustomerSchema, type Customer } from "../types/customer";
-import { zValidator } from "@hono/zod-validator";
+import { type Customer, CustomerSchema } from "../types/customer";
 
 export const customerRoutes = new Hono();
 

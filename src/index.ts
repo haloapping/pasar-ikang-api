@@ -1,11 +1,12 @@
 import * as Sentry from "@sentry/bun";
 import { Hono } from "hono";
 import { customerRoutes } from "./routes/customer";
+import { productRoutes } from "./routes/product";
 
 const app = new Hono();
 
-// TODO: Products
 app.route("/customers", customerRoutes);
+app.route("/products", productRoutes);
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
