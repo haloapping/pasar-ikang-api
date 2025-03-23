@@ -1,5 +1,5 @@
 {
-  "name": "ikang-syop-api",
+  "name": "pasar-ikang-api",
   "scripts": {
     "dev": "bun run --hot src/index.ts",
     "build": "bun install && bun db:migrate:deploy && bun db:gen",
@@ -13,7 +13,7 @@
     "db:reset": "prisma migrate reset --force"
   },
   "prisma": {
-    "seed": "bunx ts-node prisma/seed.ts"
+    "seed": "bun prisma/seed.ts"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.4.3",

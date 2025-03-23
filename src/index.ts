@@ -4,10 +4,11 @@ import { customerRoutes } from "./routes/customer";
 
 const app = new Hono();
 
+// TODO: Products
 app.route("/customers", customerRoutes);
 
 Sentry.init({
-  dsn: process.env.DSN,
+  dsn: process.env.SENTRY_DSN,
 });
 
 try {
