@@ -1,8 +1,7 @@
 import { fakerID_ID as faker } from "@faker-js/faker";
 import { Customer } from "../src/types/customer";
 import { prismaClient } from "./client";
-import { random, sample } from "underscore";
-import { CustomerContact } from "../src/types/customer-contact";
+import { fakeProducts } from "./fake-data/fake-product";
 
 async function generateFakeCustomer(nData: number) {
   let setUsernames = new Set();
@@ -36,33 +35,15 @@ async function generateFakeCustomer(nData: number) {
   return customerIdxs;
 }
 
-type customerIdxs = {
-  id: string;
-}[];
-
-async function generateFakeCustomerContact(nData: number, customerIdxs: customerIdxs) {
-  let customerContacts: CustomerContact[] = [];
-  for (let i = 0; i < nData; i++) {
-    const customerContact: CustomerContact = {
-      customerId: customerIdxs[i].id,
-      phoneNumber: faker.phone.number(),
-      city: faker.location.city(),
-      state: faker.location.state(),
-      postalCode: faker.location.zipCode(),
-      country: faker.location.country(),
-      detail: faker.location.streetAddress(),
-    };
-    customerContacts.push(customerContact);
-  }
-
-  await prismaClient.customerContact.createManyAndReturn({
-    data: customerContacts,
+async function generateFakeProduct() {
+  const products = await prismaClient.product.createManyAndReturn({
+    data: fakeProducts,
   });
 }
 
 async function main() {
   const customerIdxs = await generateFakeCustomer(20);
-  await generateFakeCustomerContact(20, customerIdxs);
+  await generateFakeProduct();
 }
 
 main()
