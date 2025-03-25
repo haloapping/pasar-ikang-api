@@ -3,6 +3,7 @@ import { Hono } from "hono";
 import { prismaClient } from "../../prisma/client";
 import { type Product, ProductSchema } from "../types/product";
 import { slugify } from "../utils/string";
+import { createNewSlug } from "../utils/slug";
 
 export const productRoutes = new Hono();
 
@@ -18,13 +19,11 @@ productRoutes.get("/", async (c) => {
   }
 });
 
-productRoutes.get("/:id", async (c) => {
+productRoutes.get("/:slug", async (c) => {
   try {
-    const id = c.req.param("id");
+    const slug = c.req.param("slug");
     const result = await prismaClient.product.findFirstOrThrow({
-      where: {
-        id: id,
-      },
+      where: { slug },
     });
 
     if (!result) {
@@ -57,9 +56,11 @@ productRoutes.patch("/:id", zValidator("json", ProductSchema), async (c) => {
   try {
     const id = c.req.param("id");
     const productJSON: Product = await c.req.json();
+
     const result = await prismaClient.product.update({
       data: {
         ...productJSON,
+        slug: productJSON.name ? createNewSlug(productJSON.name) : undefined,
       },
       where: {
         id: id,

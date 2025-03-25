@@ -7,6 +7,10 @@ import { productRoutes } from "./routes/product";
 const app = new Hono();
 app.use(logger());
 
+app.get("/", (c) => {
+  return c.json({ message: "Pasar Ikang API" });
+});
+
 app.route("/customers", customerRoutes);
 app.route("/products", productRoutes);
 

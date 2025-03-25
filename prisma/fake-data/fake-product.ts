@@ -1,10 +1,11 @@
-import { Product } from "../../src/types/product";
+import { CreateProduct } from "../../src/types/product";
 
-export const fakeProducts: Product[] = [
+export const fakeProducts: CreateProduct[] = [
   {
     name: "Udang Vaname Utuh",
     slug: "udang-vaname-utuh",
-    imageUrl: "https://ik.imagekit.io/xc0cxidhx/pasar-ikang/udang-vaname-utuh.webp",
+    imageUrl:
+      "https://ik.imagekit.io/xc0cxidhx/pasar-ikang/udang-vaname-utuh.webp",
     price: 64900,
     unit: "gr",
     stock: 5000000,
@@ -15,7 +16,8 @@ export const fakeProducts: Product[] = [
   {
     name: "Udang Vaname Kupas",
     slug: "udang-vaname-kupas",
-    imageUrl: "https://ik.imagekit.io/xc0cxidhx/pasar-ikang/udang-vaname-kupas.webp",
+    imageUrl:
+      "https://ik.imagekit.io/xc0cxidhx/pasar-ikang/udang-vaname-kupas.webp",
     price: 69900,
     unit: "gr",
     stock: 5000000,
@@ -26,7 +28,8 @@ export const fakeProducts: Product[] = [
   {
     name: "Kerang Tiram Kupas",
     slug: "kerang-tiram-kupas",
-    imageUrl: "https://ik.imagekit.io/xc0cxidhx/pasar-ikang/kerang-tiram-kupas.webp",
+    imageUrl:
+      "https://ik.imagekit.io/xc0cxidhx/pasar-ikang/kerang-tiram-kupas.webp",
     price: 69900,
     unit: "gr",
     stock: 5000000,
@@ -37,7 +40,8 @@ export const fakeProducts: Product[] = [
   {
     name: "Cumi Tube Kupas Golden Seafood",
     slug: "cumi-tube-kupas-golden-seafood",
-    imageUrl: "https://ik.imagekit.io/xc0cxidhx/pasar-ikang/cumi-tube-kupas-golden-seafood.webp",
+    imageUrl:
+      "https://ik.imagekit.io/xc0cxidhx/pasar-ikang/cumi-tube-kupas-golden-seafood.webp",
     price: 49900,
     unit: "gr",
     stock: 5000000,
@@ -48,7 +52,8 @@ export const fakeProducts: Product[] = [
   {
     name: "Ikan Tongkol Abu Steak",
     slug: "ikan-tongkol-abu-steak",
-    imageUrl: "https://ik.imagekit.io/xc0cxidhx/pasar-ikang/ikan-tongkol-abu-steak.webp",
+    imageUrl:
+      "https://ik.imagekit.io/xc0cxidhx/pasar-ikang/ikan-tongkol-abu-steak.webp",
     price: 39900,
     unit: "gr",
     stock: 5000000,
@@ -59,7 +64,8 @@ export const fakeProducts: Product[] = [
   {
     name: "Ikan Mujair Utuh",
     slug: "ikan-mujair-utuh",
-    imageUrl: "https://ik.imagekit.io/xc0cxidhx/pasar-ikang/ikan-mujair-utuh.webp",
+    imageUrl:
+      "https://ik.imagekit.io/xc0cxidhx/pasar-ikang/ikan-mujair-utuh.webp",
     price: 40300,
     unit: "gr",
     stock: 5000000,
@@ -70,7 +76,8 @@ export const fakeProducts: Product[] = [
   {
     name: "Ikan Kembung Banjar",
     slug: "ikan-kembung-banjar",
-    imageUrl: "https://ik.imagekit.io/xc0cxidhx/pasar-ikang/ikan-kembung-banjar.webp",
+    imageUrl:
+      "https://ik.imagekit.io/xc0cxidhx/pasar-ikang/ikan-kembung-banjar.webp",
     price: 40300,
     unit: "gr",
     stock: 5000000,
@@ -81,7 +88,8 @@ export const fakeProducts: Product[] = [
   {
     name: "Ikan Salmon Fillet",
     slug: "ikan-salmon-fillet",
-    imageUrl: "https://ik.imagekit.io/xc0cxidhx/pasar-ikang/ikan-salmon-fillet.webp",
+    imageUrl:
+      "https://ik.imagekit.io/xc0cxidhx/pasar-ikang/ikan-salmon-fillet.webp",
     price: 69900,
     unit: "gr",
     stock: 5000000,
@@ -92,7 +100,8 @@ export const fakeProducts: Product[] = [
   {
     name: "Ikan Tuna Giling",
     slug: "ikan-tuna-giling",
-    imageUrl: "https://ik.imagekit.io/xc0cxidhx/pasar-ikang/ikan-tuna-giling.webp",
+    imageUrl:
+      "https://ik.imagekit.io/xc0cxidhx/pasar-ikang/ikan-tuna-giling.webp",
     price: 49900,
     unit: "gr",
     stock: 5000000,
@@ -103,7 +112,8 @@ export const fakeProducts: Product[] = [
   {
     name: "Ikan Lele Utuh",
     slug: "ikan-lele-utuh",
-    imageUrl: "https://ik.imagekit.io/xc0cxidhx/pasar-ikang/ikan-lele-utuh.webp",
+    imageUrl:
+      "https://ik.imagekit.io/xc0cxidhx/pasar-ikang/ikan-lele-utuh.webp",
     price: 29900,
     unit: "gr",
     stock: 5000000,

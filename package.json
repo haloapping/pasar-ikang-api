@@ -9,6 +9,7 @@
     "db:migrate": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
     "db:gen": "prisma generate --no-hints",
+    "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
     "db:reset": "prisma migrate reset --force"
   },
@@ -22,6 +23,7 @@
     "@types/underscore": "^1.13.0",
     "hono": "^4.7.4",
     "prisma": "^6.5.0",
+    "slugify": "^1.6.6",
     "underscore": "^1.13.7",
     "zod": "^3.24.2"
   },
