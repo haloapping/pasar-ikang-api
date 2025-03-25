@@ -2,6 +2,7 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { prismaClient } from "../../prisma/client";
 import { type Product, ProductSchema } from "../types/product";
+import { slugify } from "../utils/string";
 
 export const productRoutes = new Hono();
 
@@ -11,6 +12,8 @@ productRoutes.get("/", async (c) => {
 
     return c.json({ count: result.length, data: result });
   } catch (error) {
+    console.log(error);
+
     return c.json({ error: error });
   }
 });
@@ -40,6 +43,7 @@ productRoutes.post("/", zValidator("json", ProductSchema), async (c) => {
     const result = await prismaClient.product.create({
       data: {
         ...productJSON,
+        slug: productJSON.name?.toLocaleLowerCase().replaceAll(" ", "-"),
       },
     });
 
@@ -63,7 +67,9 @@ productRoutes.patch("/:id", zValidator("json", ProductSchema), async (c) => {
     });
 
     return c.json({ message: "Product is updated", data: result });
-  } catch (error) {}
+  } catch (error) {
+    return c.json({ error: error });
+  }
 });
 
 productRoutes.delete("/:id", async (c) => {
