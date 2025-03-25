@@ -36,13 +36,13 @@ async function generateFakeCustomer(nData: number) {
 }
 
 async function generateFakeProduct() {
-  const products = await prismaClient.product.createManyAndReturn({
+  await prismaClient.product.createManyAndReturn({
     data: fakeProducts,
   });
 }
 
 async function main() {
-  const customerIdxs = await generateFakeCustomer(20);
+  await generateFakeCustomer(20);
   await generateFakeProduct();
 }
 
