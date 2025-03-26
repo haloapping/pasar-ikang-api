@@ -2,7 +2,6 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { prismaClient } from "../../prisma/client";
 import { type Product, ProductSchema } from "../types/product";
-import { slugify } from "../utils/string";
 import { createNewSlug } from "../utils/slug";
 
 export const productRoutes = new Hono();
