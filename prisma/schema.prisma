@@ -28,8 +28,8 @@ model Product {
   price       Decimal
   unit        String  @default("gr")
   description String?
-  stock       Decimal @default(1)
-  sold        Decimal @default(0)
+  stock       Int     @default(1)
+  sold        Int     @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

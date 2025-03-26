@@ -14,14 +14,14 @@ CREATE TABLE "Customer" (
 -- CreateTable
 CREATE TABLE "Product" (
     "id" TEXT NOT NULL,
-    "slug" TEXT,
-    "name" TEXT,
-    "imageUrl" TEXT,
-    "price" DECIMAL(65,30),
-    "unit" TEXT,
+    "slug" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "imageUrl" TEXT NOT NULL,
+    "price" DECIMAL(65,30) NOT NULL,
+    "unit" TEXT NOT NULL DEFAULT 'gr',
     "description" TEXT,
-    "stock" DECIMAL(65,30),
-    "sold" DECIMAL(65,30),
+    "stock" INTEGER NOT NULL DEFAULT 1,
+    "sold" INTEGER NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 

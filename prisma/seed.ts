@@ -4,40 +4,6 @@ import { PrismaClient } from "@prisma/client";
 
 export const prismaClient = new PrismaClient();
 
-// TODO: Use simpler seeding process with upsert
-
-// async function generateFakeCustomer(nData: number) {
-//   let setUsernames = new Set();
-//   let fakeUsernames = [];
-//   let counter = 1;
-//   do {
-//     let fakeUsername = faker.person.middleName().toLowerCase();
-//     if (!setUsernames.has(fakeUsername)) {
-//       setUsernames.add(fakeUsername);
-//       fakeUsernames.push(fakeUsername);
-//       counter++;
-//     }
-//   } while (counter <= nData);
-
-//   let customers = [];
-//   for (let i = 0; i < nData; i++) {
-//     let customer: Customer = {
-//       username: fakeUsernames[i],
-//       firstName: faker.person.firstName(),
-//       lastName: faker.person.lastName(),
-//       avatarUrl: faker.internet.url(),
-//     };
-//     customers.push(customer);
-//   }
-
-//   const customerIdxs = await prismaClient.customer.createManyAndReturn({
-//     data: customers,
-//     select: { id: true },
-//   });
-
-//   return customerIdxs;
-// }
-
 async function seedProducts() {
   await prismaClient.product.deleteMany();
 
@@ -45,13 +11,10 @@ async function seedProducts() {
     data: fakeProducts,
   });
 
-  const productNames = products.map((product) => product.name).join("\n");
-
-  console.info(productNames);
+  console.log("Product seed is executed 🌱");
 }
 
 async function main() {
-  // await generateFakeCustomer(20);
   await seedProducts();
 }
 
