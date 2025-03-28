@@ -1,15 +1,19 @@
-import { fakeProducts } from "./fake-data/fake-product";
-
 import { PrismaClient } from "@prisma/client";
+import { fakeProducts } from "./fake-data/fake-product";
 
 export const prismaClient = new PrismaClient();
 
 async function seedProducts() {
-  await prismaClient.product.deleteMany();
-
-  const products = await prismaClient.product.createManyAndReturn({
-    data: fakeProducts,
-  });
+  for (const fakeProduct of fakeProducts) {
+    let product = await prismaClient.product.upsert({
+      where: {
+        name: fakeProduct.name,
+      },
+      update: fakeProduct,
+      create: fakeProduct,
+    });
+    console.log(product.name);
+  }
 
   console.log("Product seed is executed 🌱");
 }
