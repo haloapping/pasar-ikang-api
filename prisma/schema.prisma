@@ -2,6 +2,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -22,14 +26,14 @@ model Customer {
 model Product {
   id String @id @default(ulid())
 
-  slug        String  @unique
+  slug        String? @unique
   name        String  @unique
   imageUrl    String
-  price       Decimal
+  price       Int
   unit        String  @default("gr")
   description String?
-  stock       Int     @default(1)
-  sold        Int     @default(0)
+  stock       Int
+  sold        Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
