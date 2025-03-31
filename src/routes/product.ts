@@ -1,88 +1,163 @@
-import { zValidator } from "@hono/zod-validator";
-import { Hono } from "hono";
+import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { prismaClient } from "../../prisma/client";
-import { type Product, ProductSchema } from "../types/product";
+import { CreateProductSchema, ProductSchema, UpdateProductSchema } from "../types/product";
 import { createNewSlug } from "../utils/slug";
 
-export const productRoutes = new Hono();
+export const productRoutes = new OpenAPIHono();
 
-productRoutes.get("/", async (c) => {
-  try {
-    const result = await prismaClient.product.findMany();
+productRoutes.openapi(
+  createRoute({
+    method: "get",
+    path: "/",
+    description: "Get all products",
+    tags: ["products"],
+    responses: {
+      200: {
+        description: "Get all products response",
+        content: { "application/json": { schema: z.array(ProductSchema) } },
+      },
+    },
+  }),
+  async (c) => {
+    const products = await prismaClient.product.findMany();
 
-    return c.json({ count: result.length, data: result });
-  } catch (error) {
-    console.log(error);
-
-    return c.json({ error: error });
+    return c.json(products);
   }
-});
+);
 
-productRoutes.get("/:slug", async (c) => {
-  try {
+productRoutes.openapi(
+  createRoute({
+    method: "get",
+    path: "/:slug",
+    description: "Get product by slug",
+    tags: ["products"],
+    request: { params: z.object({ slug: z.string() }) },
+    responses: {
+      200: {
+        description: "Get product by slug",
+        content: { "application/json": { schema: ProductSchema } },
+      },
+      404: {
+        description: "Get product by slug not found",
+      },
+    },
+  }),
+  async (c) => {
     const slug = c.req.param("slug");
-    const result = await prismaClient.product.findFirstOrThrow({
+    const product = await prismaClient.product.findFirstOrThrow({
       where: { slug },
     });
 
-    if (!result) {
-      return c.json({ message: "Product not found", data: result });
+    if (!product) {
+      return c.json({ message: "Product not found" }, 404);
     }
 
-    return c.json({ message: "Product found", data: result });
-  } catch (error) {
-    return c.json({ error: error });
+    return c.json(product);
   }
-});
+);
 
-productRoutes.post("/", zValidator("json", ProductSchema), async (c) => {
-  try {
-    const productJSON: Product = await c.req.json();
-    const result = await prismaClient.product.create({
+productRoutes.openapi(
+  createRoute({
+    method: "post",
+    path: "/",
+    description: "Add new product",
+    tags: ["products"],
+    request: {
+      body: {
+        content: {
+          "application/json": {
+            schema: CreateProductSchema,
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: "Add new product",
+        content: { "application/json": { schema: ProductSchema } },
+      },
+    },
+  }),
+  async (c) => {
+    const newProductJSON = c.req.valid("json");
+    const newProduct = await prismaClient.product.create({
       data: {
-        ...productJSON,
-        slug: productJSON.name?.toLocaleLowerCase().replaceAll(" ", "-"),
+        ...newProductJSON,
+        slug: createNewSlug(newProductJSON.name),
       },
     });
 
-    return c.json({ message: "Product is added", data: result });
-  } catch (error) {
-    return c.json({ error: error });
+    return c.json(newProduct);
   }
-});
+);
 
-productRoutes.patch("/:id", zValidator("json", ProductSchema), async (c) => {
-  try {
+productRoutes.openapi(
+  createRoute({
+    method: "patch",
+    path: "/:id",
+    description: "Update product by id",
+    tags: ["products"],
+    request: {
+      params: z.object({ id: z.string().ulid() }),
+      body: {
+        content: {
+          "application/json": {
+            schema: UpdateProductSchema,
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: "Update product by id",
+        content: { "application/json": { schema: ProductSchema } },
+      },
+    },
+  }),
+  async (c) => {
     const id = c.req.param("id");
-    const productJSON: Product = await c.req.json();
-
-    const result = await prismaClient.product.update({
+    const updateProductJSON = await c.req.json();
+    const updatedProduct = await prismaClient.product.update({
       data: {
-        ...productJSON,
-        slug: productJSON.name ? createNewSlug(productJSON.name) : undefined,
+        ...updateProductJSON,
+        slug: updateProductJSON.name ? createNewSlug(updateProductJSON.name) : undefined,
       },
       where: {
         id: id,
       },
     });
 
-    return c.json({ message: "Product is updated", data: result });
-  } catch (error) {
-    return c.json({ error: error });
+    return c.json(updatedProduct);
   }
-});
+);
 
-productRoutes.delete("/:id", async (c) => {
-  try {
-    const id = c.req.param("id");
-    const result = await prismaClient.product.delete({
-      where: {
-        id: id,
+productRoutes.openapi(
+  createRoute({
+    method: "delete",
+    path: "/:id",
+    description: "Delete product by id",
+    tags: ["products"],
+    request: { params: z.object({ id: z.string().ulid() }) },
+    responses: {
+      200: {
+        description: "Delete product by id",
+        content: { "application/json": { schema: ProductSchema } },
       },
+      404: {
+        description: "Delete product by id not found",
+      },
+    },
+  }),
+  async (c) => {
+    const id = c.req.param("id");
+    const product = await prismaClient.product.delete({
+      where: { id },
     });
 
-    return c.json({ message: "Product is deleted", data: result });
-  } catch (error) {
-    return c.json({ error: error });
+    if (!product) {
+      return c.json({ message: "Product not found" }, 404);
+    }
+
+    return c.json(product);
   }
-});
+);

@@ -1,82 +1,160 @@
-import { zValidator } from "@hono/zod-validator";
-import { Hono } from "hono";
+import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { prismaClient } from "../../prisma/client";
-import { type Customer, CustomerSchema } from "../types/customer";
+import { CreateCustomerSchema, CustomerSchema, UpdateCustomerSchema } from "../types/customer";
 
-export const customerRoutes = new Hono();
+export const customerRoutes = new OpenAPIHono();
 
-customerRoutes.get("/", async (c) => {
-  try {
-    const result = await prismaClient.customer.findMany();
-
-    return c.json({ count: result.length, data: result });
-  } catch (error) {
-    return c.json({ error: error });
-  }
-});
-
-customerRoutes.get("/:id", async (c) => {
-  try {
-    const id = c.req.param("id");
-    const result = await prismaClient.customer.findFirstOrThrow({
-      where: {
-        id: id,
+customerRoutes.openapi(
+  createRoute({
+    method: "get",
+    path: "/",
+    description: "Get all customers",
+    tags: ["customers"],
+    responses: {
+      200: {
+        description: "Get all customers",
+        content: { "application/json": { schema: z.array(CustomerSchema) } },
       },
+    },
+  }),
+  async (c) => {
+    const customers = await prismaClient.customer.findMany();
+
+    return c.json(customers);
+  }
+);
+
+customerRoutes.openapi(
+  createRoute({
+    method: "get",
+    path: "/:slug",
+    description: "Get customer by id",
+    tags: ["customers"],
+    request: { params: z.object({ slug: z.string() }) },
+    responses: {
+      200: {
+        description: "Get customer by id",
+        content: { "application/json": { schema: CustomerSchema } },
+      },
+      404: {
+        description: "Get customer by slug not found",
+      },
+    },
+  }),
+  async (c) => {
+    const id = c.req.param("id");
+    const customer = await prismaClient.customer.findFirstOrThrow({
+      where: { id },
     });
 
-    if (!result) {
-      return c.json({ message: "Customer not found", data: result });
+    if (!customer) {
+      return c.json({ message: "Customer not found" }, 404);
     }
 
-    return c.json({ message: "Customer found", data: result });
-  } catch (error) {
-    return c.json({ error: error });
+    return c.json(customer);
   }
-});
+);
 
-customerRoutes.post("/", zValidator("json", CustomerSchema), async (c) => {
-  try {
-    const customerJSON: Customer = await c.req.json();
-    const result = await prismaClient.customer.create({
+customerRoutes.openapi(
+  createRoute({
+    method: "post",
+    path: "/",
+    description: "Add new customer",
+    tags: ["customers"],
+    request: {
+      body: {
+        content: {
+          "application/json": {
+            schema: CreateCustomerSchema,
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: "Add new customer",
+        content: { "application/json": { schema: CustomerSchema } },
+      },
+    },
+  }),
+  async (c) => {
+    const newCustomerJSON = c.req.valid("json");
+    const newCustomer = await prismaClient.customer.create({
       data: {
-        ...customerJSON,
+        ...newCustomerJSON,
       },
     });
 
-    return c.json({ message: "Customer is added", data: result });
-  } catch (error) {
-    return c.json({ error: error });
+    return c.json(newCustomer);
   }
-});
+);
 
-customerRoutes.patch("/:id", zValidator("json", CustomerSchema), async (c) => {
-  try {
+customerRoutes.openapi(
+  createRoute({
+    method: "patch",
+    path: "/:id",
+    description: "Update customer by id",
+    tags: ["customers"],
+    request: {
+      params: z.object({ id: z.string().ulid() }),
+      body: {
+        content: {
+          "application/json": {
+            schema: UpdateCustomerSchema,
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: "Update customer by id",
+        content: { "application/json": { schema: CustomerSchema } },
+      },
+    },
+  }),
+  async (c) => {
     const id = c.req.param("id");
-    const customerJSON: Customer = await c.req.json();
-    const result = await prismaClient.customer.update({
+    const updateCustomerJSON = await c.req.json();
+    const updatedCustomer = await prismaClient.customer.update({
       data: {
-        ...customerJSON,
+        ...updateCustomerJSON,
       },
       where: {
         id: id,
       },
     });
 
-    return c.json({ message: "Customer is updated", data: result });
-  } catch (error) {}
-});
+    return c.json(updatedCustomer);
+  }
+);
 
-customerRoutes.delete("/:id", async (c) => {
-  try {
-    const id = c.req.param("id");
-    const result = await prismaClient.customer.delete({
-      where: {
-        id: id,
+customerRoutes.openapi(
+  createRoute({
+    method: "delete",
+    path: "/:id",
+    description: "Delete customer by id",
+    tags: ["customers"],
+    request: { params: z.object({ id: z.string().ulid() }) },
+    responses: {
+      200: {
+        description: "Delete customer by id",
+        content: { "application/json": { schema: CustomerSchema } },
       },
+      404: {
+        description: "Delete customer by id not found",
+      },
+    },
+  }),
+  async (c) => {
+    const id = c.req.param("id");
+    const customer = await prismaClient.customer.delete({
+      where: { id },
     });
 
-    return c.json({ message: "Customer is deleted", data: result });
-  } catch (error) {
-    return c.json({ error: error });
+    if (!customer) {
+      return c.json({ message: "customer not found" }, 404);
+    }
+
+    return c.json(customer);
   }
-});
+);
