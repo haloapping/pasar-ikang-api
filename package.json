@@ -21,7 +21,7 @@
     "@hono/zod-validator": "^0.4.3",
     "@prisma/client": "^6.5.0",
     "@scalar/hono-api-reference": "^0.7.4",
-    "@sentry/bun": "^9.5.0",
+    "@sentry/bun": "^9.10.1",
     "@types/underscore": "^1.13.0",
     "hono": "^4.7.5",
     "prisma": "^6.5.0",
