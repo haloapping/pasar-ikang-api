@@ -17,7 +17,7 @@ apiRoutes
     openapi: "3.1.0",
     info: { ...configGeneral, version: "v1" },
   })
-  .get("/", scalarHonoApiReference({ spec: { url: "/openapi.json" } }))
+  .get("/", scalarHonoApiReference({ pageTitle: "Pasar Ikang API", url: "/openapi.json" }))
   .onError((err, c) => {
     return c.json({ code: 400, status: "error", message: err.message }, 400);
   });
