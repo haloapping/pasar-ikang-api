@@ -14,14 +14,22 @@ productRoutes.openapi(
     responses: {
       200: {
         description: "Get all products response",
-        content: { "application/json": { schema: z.array(ProductSchema) } },
+        content: {
+          "application/json": {
+            schema: z.object({ count: z.number().min(0), data: z.array(ProductSchema) }),
+          },
+        },
       },
     },
   }),
   async (c) => {
-    const products = await prismaClient.product.findMany();
+    try {
+      const products = await prismaClient.product.findMany();
 
-    return c.json(products);
+      return c.json({ count: products.length, data: products });
+    } catch (error) {
+      return c.json({ error: error });
+    }
   }
 );
 
@@ -43,16 +51,20 @@ productRoutes.openapi(
     },
   }),
   async (c) => {
-    const slug = c.req.param("slug");
-    const product = await prismaClient.product.findFirstOrThrow({
-      where: { slug },
-    });
+    try {
+      const slug = c.req.param("slug");
+      const product = await prismaClient.product.findFirstOrThrow({
+        where: { slug },
+      });
 
-    if (!product) {
-      return c.json({ message: "Product not found" }, 404);
+      if (!product) {
+        return c.json({ message: "Product not found" }, 404);
+      }
+
+      return c.json(product);
+    } catch (error) {
+      return c.json({ error: error });
     }
-
-    return c.json(product);
   }
 );
 
@@ -79,15 +91,19 @@ productRoutes.openapi(
     },
   }),
   async (c) => {
-    const newProductJSON = c.req.valid("json");
-    const newProduct = await prismaClient.product.create({
-      data: {
-        ...newProductJSON,
-        slug: createNewSlug(newProductJSON.name),
-      },
-    });
+    try {
+      const newProductJSON = c.req.valid("json");
+      const newProduct = await prismaClient.product.create({
+        data: {
+          ...newProductJSON,
+          slug: createNewSlug(newProductJSON.name),
+        },
+      });
 
-    return c.json(newProduct);
+      return c.json(newProduct);
+    } catch (error) {
+      return c.json({ error: error });
+    }
   }
 );
 
@@ -115,19 +131,23 @@ productRoutes.openapi(
     },
   }),
   async (c) => {
-    const id = c.req.param("id");
-    const updateProductJSON = await c.req.json();
-    const updatedProduct = await prismaClient.product.update({
-      data: {
-        ...updateProductJSON,
-        slug: updateProductJSON.name ? createNewSlug(updateProductJSON.name) : undefined,
-      },
-      where: {
-        id: id,
-      },
-    });
+    try {
+      const id = c.req.param("id");
+      const updateProductJSON = await c.req.json();
+      const updatedProduct = await prismaClient.product.update({
+        data: {
+          ...updateProductJSON,
+          slug: updateProductJSON.name ? createNewSlug(updateProductJSON.name) : undefined,
+        },
+        where: {
+          id: id,
+        },
+      });
 
-    return c.json(updatedProduct);
+      return c.json(updatedProduct);
+    } catch (error) {
+      return c.json({ error: error });
+    }
   }
 );
 
@@ -149,15 +169,19 @@ productRoutes.openapi(
     },
   }),
   async (c) => {
-    const id = c.req.param("id");
-    const product = await prismaClient.product.delete({
-      where: { id },
-    });
+    try {
+      const id = c.req.param("id");
+      const product = await prismaClient.product.delete({
+        where: { id },
+      });
 
-    if (!product) {
-      return c.json({ message: "Product not found" }, 404);
+      if (!product) {
+        return c.json({ message: "Product not found" }, 404);
+      }
+
+      return c.json({ message: "Data is found", data: product });
+    } catch (error) {
+      return c.json({ error: error });
     }
-
-    return c.json(product);
   }
 );
