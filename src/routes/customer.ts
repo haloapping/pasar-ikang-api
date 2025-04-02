@@ -27,10 +27,10 @@ customerRoutes.openapi(
 customerRoutes.openapi(
   createRoute({
     method: "get",
-    path: "/:slug",
+    path: "/:id",
     description: "Get customer by id",
     tags: ["customers"],
-    request: { params: z.object({ slug: z.string() }) },
+    request: { params: z.object({ id: z.string() }) },
     responses: {
       200: {
         description: "Get customer by id",
