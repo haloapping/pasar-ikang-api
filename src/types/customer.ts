@@ -23,3 +23,7 @@ export const CreateCustomerSchema = CustomerSchema.omit({
 }).strict();
 
 export const UpdateCustomerSchema = CreateCustomerSchema.partial().strict();
+
+export type Customer = z.infer<typeof CustomerSchema>;
+export type CreateCustomer = z.infer<typeof CreateCustomerSchema>;
+export type UpdateCustomer = z.infer<typeof UpdateCustomerSchema>;

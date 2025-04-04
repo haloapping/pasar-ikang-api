@@ -30,3 +30,7 @@ export const CreateProductSchema = ProductSchema.omit({
 }).strict();
 
 export const UpdateProductSchema = CreateProductSchema.partial().strict();
+
+export type Product = z.infer<typeof ProductSchema>;
+export type CreateProduct = z.infer<typeof CreateProductSchema>;
+export type UpdateProduct = z.infer<typeof UpdateProductSchema>;

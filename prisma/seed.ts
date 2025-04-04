@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { fakeProducts } from "./fake-data/fake-product";
+import slugify from "slugify";
 
 export const prismaClient = new PrismaClient();
 
@@ -10,7 +11,10 @@ async function seedProducts() {
         name: fakeProduct.name,
       },
       update: fakeProduct,
-      create: fakeProduct,
+      create: {
+        ...fakeProduct,
+        slug: slugify(fakeProduct.name),
+      },
     });
     console.log(product.name);
   }
