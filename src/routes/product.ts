@@ -9,6 +9,8 @@ productRoutes.openapi(
   createRoute({
     method: "get",
     path: "/",
+    operationId: "Get all products",
+    summary: "Get all products",
     description: "Get all products",
     tags: ["products"],
     responses: {
@@ -37,13 +39,15 @@ productRoutes.openapi(
   createRoute({
     method: "get",
     path: "/:slug",
+    operationId: "Get produt by slug",
+    summary: "Get produt by slug",
     description: "Get product by slug",
     tags: ["products"],
     request: { params: z.object({ slug: z.string() }) },
     responses: {
       200: {
         description: "Get product by slug",
-        content: { "application/json": { schema: ProductSchema } },
+        content: { "application/json": { schema: z.object({ data: ProductSchema }) } },
       },
       404: {
         description: "Get product by slug not found",
@@ -61,7 +65,7 @@ productRoutes.openapi(
         return c.json({ message: "Product not found" }, 404);
       }
 
-      return c.json(product);
+      return c.json({ data: product }, 200);
     } catch (error) {
       return c.json({ error: error });
     }
@@ -72,6 +76,8 @@ productRoutes.openapi(
   createRoute({
     method: "post",
     path: "/",
+    operationId: "Add new product",
+    summary: "Add new product",
     description: "Add new product",
     tags: ["products"],
     request: {
@@ -86,7 +92,7 @@ productRoutes.openapi(
     responses: {
       200: {
         description: "Add new product",
-        content: { "application/json": { schema: ProductSchema } },
+        content: { "application/json": { schema: z.object({ data: ProductSchema }) } },
       },
     },
   }),
@@ -100,7 +106,7 @@ productRoutes.openapi(
         },
       });
 
-      return c.json(newProduct);
+      return c.json({ data: newProduct }, 200);
     } catch (error) {
       return c.json({ error: error });
     }
@@ -111,6 +117,8 @@ productRoutes.openapi(
   createRoute({
     method: "patch",
     path: "/:id",
+    operationId: "Update product by id",
+    summary: "Update product by id",
     description: "Update product by id",
     tags: ["products"],
     request: {
@@ -126,7 +134,7 @@ productRoutes.openapi(
     responses: {
       200: {
         description: "Update product by id",
-        content: { "application/json": { schema: ProductSchema } },
+        content: { "application/json": { schema: z.object({ data: ProductSchema }) } },
       },
     },
   }),
@@ -144,7 +152,7 @@ productRoutes.openapi(
         },
       });
 
-      return c.json(updatedProduct);
+      return c.json({ data: updatedProduct }, 200);
     } catch (error) {
       return c.json({ error: error });
     }
@@ -155,13 +163,15 @@ productRoutes.openapi(
   createRoute({
     method: "delete",
     path: "/:id",
+    operationId: "Delete product by id",
+    summary: "Delete product by id",
     description: "Delete product by id",
     tags: ["products"],
     request: { params: z.object({ id: z.string().ulid() }) },
     responses: {
       200: {
         description: "Delete product by id",
-        content: { "application/json": { schema: ProductSchema } },
+        content: { "application/json": { schema: z.object({ data: ProductSchema }) } },
       },
       404: {
         description: "Delete product by id not found",
@@ -179,7 +189,7 @@ productRoutes.openapi(
         return c.json({ message: "Product not found" }, 404);
       }
 
-      return c.json({ message: "Data is found", data: product });
+      return c.json({ message: "Data is found", data: product }, 200);
     } catch (error) {
       return c.json({ error: error });
     }
