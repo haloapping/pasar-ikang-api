@@ -22,6 +22,9 @@ productRoutes.openapi(
           },
         },
       },
+      400: {
+        description: "Bad request",
+      },
     },
   }),
   async (c) => {
@@ -30,7 +33,7 @@ productRoutes.openapi(
 
       return c.json({ count: products.length, data: products });
     } catch (error) {
-      return c.json({ error: error });
+      return c.json({ error: error }, 400);
     }
   }
 );
@@ -94,6 +97,9 @@ productRoutes.openapi(
         description: "Add new product",
         content: { "application/json": { schema: z.object({ data: ProductSchema }) } },
       },
+      400: {
+        description: "Bad request",
+      },
     },
   }),
   async (c) => {
@@ -108,7 +114,7 @@ productRoutes.openapi(
 
       return c.json({ data: newProduct }, 200);
     } catch (error) {
-      return c.json({ error: error });
+      return c.json({ error: error }, 400);
     }
   }
 );
@@ -136,6 +142,9 @@ productRoutes.openapi(
         description: "Update product by id",
         content: { "application/json": { schema: z.object({ data: ProductSchema }) } },
       },
+      404: {
+        description: "Delete product by id not found",
+      },
     },
   }),
   async (c) => {
@@ -154,7 +163,7 @@ productRoutes.openapi(
 
       return c.json({ data: updatedProduct }, 200);
     } catch (error) {
-      return c.json({ error: error });
+      return c.json({ error: error }, 400);
     }
   }
 );
@@ -191,7 +200,7 @@ productRoutes.openapi(
 
       return c.json({ message: "Data is found", data: product }, 200);
     } catch (error) {
-      return c.json({ error: error });
+      return c.json({ error: error }, 400);
     }
   }
 );
