@@ -2,11 +2,13 @@ import { OpenAPIHono } from "@hono/zod-openapi";
 import { apiReference as scalarHonoApiReference } from "@scalar/hono-api-reference";
 import * as Sentry from "@sentry/bun";
 import { logger } from "hono/logger";
+import { cors } from "hono/cors";
 import { configDocs, configGeneral } from "./configs/app";
 import { customerRoutes } from "./routes/customer";
 import { productRoutes } from "./routes/product";
 
 const app = new OpenAPIHono();
+app.use(cors());
 app.use(logger());
 const apiRoutes = app.basePath("/");
 apiRoutes.route("/products", productRoutes);
