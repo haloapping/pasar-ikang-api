@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
+import { createNewSlug } from "../src/utils/slug";
 import { fakeProducts } from "./fake-data/fake-product";
-import slugify from "slugify";
 
 export const prismaClient = new PrismaClient();
 
@@ -13,7 +13,7 @@ async function seedProducts() {
       update: fakeProduct,
       create: {
         ...fakeProduct,
-        slug: slugify(fakeProduct.name),
+        slug: createNewSlug(fakeProduct.name),
       },
     });
     console.log(product.name);
