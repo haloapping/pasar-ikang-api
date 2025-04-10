@@ -10,7 +10,10 @@ async function seedProducts() {
       where: {
         name: fakeProduct.name,
       },
-      update: fakeProduct,
+      update: {
+        ...fakeProduct,
+        slug: createNewSlug(fakeProduct.name),
+      },
       create: {
         ...fakeProduct,
         slug: createNewSlug(fakeProduct.name),
