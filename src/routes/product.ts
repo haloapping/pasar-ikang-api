@@ -41,6 +41,48 @@ productRoutes.openapi(
 productRoutes.openapi(
   createRoute({
     method: "get",
+    path: "/search",
+    operationId: "Get produts by keyword",
+    summary: "Get produts by keyword",
+    description: "Get produts by keyword",
+    tags: ["products"],
+    request: { query: z.object({ q: z.string().min(0) }) },
+    responses: {
+      200: {
+        description: "Get products by keyword",
+        content: { "application/json": { schema: z.object({ data: z.array(ProductSchema) }) } },
+      },
+      400: {
+        description: "Bad request",
+      },
+    },
+  }),
+  async (c) => {
+    const keyword = c.req.query("q");
+
+    try {
+      const products = await prismaClient.product.findMany({
+        where: {
+          OR: [
+            { slug: { contains: keyword } },
+            { name: { contains: keyword } },
+            { imageUrl: { contains: keyword } },
+            { unit: { contains: keyword } },
+            { description: { contains: keyword } },
+          ],
+        },
+      });
+
+      return c.json({ count: products.length, data: products });
+    } catch (error) {
+      return c.json({ error: error }, 400);
+    }
+  }
+);
+
+productRoutes.openapi(
+  createRoute({
+    method: "get",
     path: "/:slug",
     operationId: "Get produt by slug",
     summary: "Get produt by slug",
