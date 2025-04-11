@@ -46,11 +46,15 @@ productRoutes.openapi(
     summary: "Get produts by keyword",
     description: "Get produts by keyword",
     tags: ["products"],
-    request: { query: z.object({ q: z.string().min(0) }) },
+    request: { query: z.object({ keyword: z.string().min(0) }) },
     responses: {
       200: {
         description: "Get products by keyword",
-        content: { "application/json": { schema: z.object({ data: z.array(ProductSchema) }) } },
+        content: {
+          "application/json": {
+            schema: z.object({ count: z.number().min(0), data: z.array(ProductSchema) }),
+          },
+        },
       },
       400: {
         description: "Bad request",
@@ -58,7 +62,7 @@ productRoutes.openapi(
     },
   }),
   async (c) => {
-    const keyword = c.req.query("q");
+    const keyword = c.req.query("keyword");
 
     try {
       const products = await prismaClient.product.findMany({
