@@ -1,5 +1,4 @@
-import { z } from "zod";
-import { CreateProduct, CreateProductSchema } from "../../src/types/product";
+import { CreateProduct } from "../../src/types/product";
 
 export const fakeProducts: CreateProduct[] = [
   {

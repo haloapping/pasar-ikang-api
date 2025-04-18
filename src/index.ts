@@ -4,15 +4,17 @@ import * as Sentry from "@sentry/bun";
 import { logger } from "hono/logger";
 import { cors } from "hono/cors";
 import { configDocs, configGeneral } from "./configs/app";
-import { customerRoutes } from "./routes/customer";
+import { userRoutes } from "./routes/user";
 import { productRoutes } from "./routes/product";
+import { cartRoutes } from "./routes/cart";
 
 const app = new OpenAPIHono();
 app.use(cors());
 app.use(logger());
 const apiRoutes = app.basePath("/");
 apiRoutes.route("/products", productRoutes);
-apiRoutes.route("/customers", customerRoutes);
+apiRoutes.route("/users", userRoutes);
+apiRoutes.route("/carts", cartRoutes);
 
 apiRoutes
   .doc(configDocs.openapi, {

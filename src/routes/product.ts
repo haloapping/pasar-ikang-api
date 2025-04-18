@@ -106,7 +106,7 @@ productRoutes.openapi(
   async (c) => {
     try {
       const slug = c.req.param("slug");
-      const product = await prismaClient.product.findFirstOrThrow({
+      const product = await prismaClient.product.findFirst({
         where: { slug },
       });
 

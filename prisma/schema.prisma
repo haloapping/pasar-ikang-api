@@ -11,10 +11,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Customer {
-  id String @id @default(ulid())
+model User {
+  id        String     @id @default(ulid())
+  Cart      Cart?
+  cartItems CartItem[]
 
   username  String  @unique
+  email     String  @unique
+  password  String
   firstName String
   lastName  String?
   avatarUrl String?
@@ -24,7 +28,8 @@ model Customer {
 }
 
 model Product {
-  id String @id @default(ulid())
+  id        String     @id @default(ulid())
+  cartItems CartItem[]
 
   slug        String? @unique
   name        String  @unique
@@ -34,6 +39,32 @@ model Product {
   description String?
   stock       Int
   sold        Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Cart {
+  id        String     @id @default(ulid())
+  userId    String     @unique
+  user      User       @relation(fields: [userId], references: [id])
+  cartItems CartItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CartItem {
+  id        String  @id @default(ulid())
+  cartId    String
+  Cart      Cart    @relation(fields: [cartId], references: [userId])
+  userId    String
+  User      User    @relation(fields: [userId], references: [id])
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+
+  quantity    Int
+  isProcessed Boolean?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
