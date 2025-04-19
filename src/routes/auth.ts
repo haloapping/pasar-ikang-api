@@ -104,12 +104,13 @@ authRoutes.openapi(
     }
 
     // Verify password
-    if (user?.password?.hash) {
-      const isPasswordCorrect = await verifyPassword(loginUser.password, user?.password?.hash);
+    if (!user?.password?.hash) {
+      return c.json({ message: "Password is incorrect" }, 400);
+    }
 
-      if (!isPasswordCorrect) {
-        return c.json({ message: "Password is incorrect" }, 400);
-      }
+    const isPasswordCorrect = await verifyPassword(loginUser.password, user?.password?.hash);
+    if (!isPasswordCorrect) {
+      return c.json({ message: "Password is incorrect" }, 400);
     }
 
     // Generate JWT
