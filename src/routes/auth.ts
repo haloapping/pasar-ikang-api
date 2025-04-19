@@ -127,6 +127,10 @@ authRoutes.openapi(
   createRoute({
     method: "get",
     path: "/me",
+    operationId: "Me",
+    summary: "Me",
+    description: "Me",
+    tags: ["auth"],
     middleware: checkAuthorized,
     request: {
       headers: z.object({
