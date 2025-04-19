@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { hashPassword } from "../src/utils/hash-password";
+import { hashPassword } from "../src/utils/password";
 import { createNewSlug } from "../src/utils/slug";
 import { fakeProducts } from "./fake-data/fake-product";
 import { fakeUsers } from "./fake-data/fake-user";
@@ -35,11 +35,19 @@ async function seedUsers() {
       },
       update: {
         ...fakeUser,
-        password: await hashPassword(fakeUser.password),
+        password: {
+          create: {
+            hash: await hashPassword(fakeUser.password),
+          },
+        },
       },
       create: {
         ...fakeUser,
-        password: await hashPassword(fakeUser.password),
+        password: {
+          create: {
+            hash: await hashPassword(fakeUser.password),
+          },
+        },
       },
     });
 
