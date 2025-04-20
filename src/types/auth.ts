@@ -1,10 +1,10 @@
 import { z } from "zod";
 
 export const RegisterSchema = z.object({
-  firstName: z.string().min(1).openapi({ example: "Fufu" }),
-  lastName: z.string().min(1).openapi({ example: "Fafa" }),
-  username: z.string().min(1).openapi({ example: "mulyonO" }),
-  email: z.string().email().openapi({ example: "mulyono@co.id" }),
+  firstName: z.string().min(1).openapi({ example: "Apping" }),
+  lastName: z.string().min(1).openapi({ example: "Appong" }),
+  username: z.string().min(1).openapi({ example: "ping" }),
+  email: z.string().email().openapi({ example: "ping@haloapping.com" }),
   password: z
     .string()
     .min(8, { message: "Password must be at least 8 characters long" })
@@ -43,6 +43,6 @@ export const RegisterSchema = z.object({
 });
 
 export const LoginSchema = z.object({
-  username: z.string().openapi({ example: "mulyonO" }),
+  username: z.string().openapi({ example: "ping" }),
   password: z.string().openapi({ example: "ABCabc123!" }),
 });

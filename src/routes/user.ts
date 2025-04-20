@@ -38,10 +38,10 @@ userRoutes.openapi(
     responses: {
       200: {
         description: "Get user by id",
-        content: { "application/json": { schema: z.object({ data: z.array(UserSchema) }) } },
+        content: { "application/json": { schema: z.object({ data: UserSchema }) } },
       },
       404: {
-        description: "Get user by slug not found",
+        description: "Get user by id not found",
       },
     },
   }),
