@@ -27,35 +27,39 @@ authRoutes.openapi(
     },
     responses: {
       200: {
-        description: "Get user by id",
+        description: "Register user",
         content: { "application/json": { schema: UserSchema } },
       },
-      404: {
-        description: "Get user by slug not found",
+      400: {
+        description: "Register user is failed",
       },
     },
   }),
   async (c) => {
-    const registerUser = c.req.valid("json");
+    try {
+      const registerUser = c.req.valid("json");
 
-    if (registerUser.password !== registerUser.confirmPassword) {
-      return c.json({ message: "Password and confirm password is not match" }, 400);
-    }
+      if (registerUser.password !== registerUser.confirmPassword) {
+        return c.json({ message: "Password and confirm password is not match" }, 400);
+      }
 
-    delete registerUser.confirmPassword;
+      delete registerUser.confirmPassword;
 
-    const newUser = await prismaClient.user.create({
-      data: {
-        ...registerUser,
-        password: {
-          create: {
-            hash: await hashPassword(registerUser.password),
+      const newUser = await prismaClient.user.create({
+        data: {
+          ...registerUser,
+          password: {
+            create: {
+              hash: await hashPassword(registerUser.password),
+            },
           },
         },
-      },
-    });
+      });
 
-    return c.json({ data: newUser }, 200);
+      return c.json({ data: newUser }, 200);
+    } catch (error) {
+      return c.json({ error: error }, 400);
+    }
   }
 );
 
@@ -78,49 +82,53 @@ authRoutes.openapi(
     },
     responses: {
       200: {
-        description: "Get user by id",
+        description: "Login user",
         content: { "application/json": { schema: z.object({ token: z.string().jwt() }) } },
       },
-      404: {
-        description: "Get user by slug not found",
+      400: {
+        description: "Login user is failed",
       },
     },
   }),
   async (c) => {
-    const loginUser = c.req.valid("json");
+    try {
+      const loginUser = c.req.valid("json");
 
-    // Get user by username
-    const user = await prismaClient.user.findUnique({
-      where: {
-        username: loginUser.username,
-      },
-      include: {
-        password: true,
-      },
-    });
+      // Get user by username
+      const user = await prismaClient.user.findUnique({
+        where: {
+          username: loginUser.username,
+        },
+        include: {
+          password: true,
+        },
+      });
 
-    if (!user) {
-      return c.json({ message: "User not found" });
+      if (!user) {
+        return c.json({ message: "User not found" });
+      }
+
+      // Verify password
+      if (!user?.password?.hash) {
+        return c.json({ message: "Password is incorrect" }, 400);
+      }
+
+      const isPasswordCorrect = await verifyPassword(loginUser.password, user?.password?.hash);
+      if (!isPasswordCorrect) {
+        return c.json({ message: "Password is incorrect" }, 400);
+      }
+
+      // Generate JWT
+      const payload = {
+        sub: user.id,
+      };
+      const secret = String(process.env.TOKEN_SECRET_KEY);
+      const token = await sign(payload, secret);
+
+      return c.json({ token: token }, 200);
+    } catch (error) {
+      return c.json({ error: error }, 400);
     }
-
-    // Verify password
-    if (!user?.password?.hash) {
-      return c.json({ message: "Password is incorrect" }, 400);
-    }
-
-    const isPasswordCorrect = await verifyPassword(loginUser.password, user?.password?.hash);
-    if (!isPasswordCorrect) {
-      return c.json({ message: "Password is incorrect" }, 400);
-    }
-
-    // Generate JWT
-    const payload = {
-      sub: user.id,
-    };
-    const secret = String(process.env.TOKEN_SECRET_KEY);
-    const token = await sign(payload, secret);
-
-    return c.json({ token: token }, 200);
   }
 );
 
