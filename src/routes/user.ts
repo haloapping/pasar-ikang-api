@@ -38,7 +38,7 @@ userRoutes.openapi(
     responses: {
       200: {
         description: "Get user by id",
-        content: { "application/json": { schema: z.object({ data: UserSchema }) } },
+        content: { "application/json": { schema: z.object({ ...UserSchema.shape }) } },
       },
       404: {
         description: "Get user by id not found",
@@ -55,6 +55,6 @@ userRoutes.openapi(
       return c.json({ message: "user not found" }, 404);
     }
 
-    return c.json({ data: user }, 200);
+    return c.json({ ...user }, 200);
   }
 );
