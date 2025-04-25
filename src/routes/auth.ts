@@ -40,7 +40,10 @@ authRoutes.openapi(
       const registerUser = c.req.valid("json");
 
       if (registerUser.password !== registerUser.confirmPassword) {
-        return c.json({ message: "Password and confirm password is not match" }, 400);
+        return c.json(
+          { message: "Password and confirm password is not match" },
+          400
+        );
       }
 
       delete registerUser.confirmPassword;
@@ -83,7 +86,9 @@ authRoutes.openapi(
     responses: {
       200: {
         description: "Login user",
-        content: { "application/json": { schema: z.object({ token: z.string().jwt() }) } },
+        content: {
+          "application/json": { schema: z.object({ token: z.string().jwt() }) },
+        },
       },
       400: {
         description: "Login user is failed",
@@ -105,7 +110,7 @@ authRoutes.openapi(
       });
 
       if (!user) {
-        return c.json({ message: "User not found" });
+        return c.json({ message: "User not found" }, 400);
       }
 
       // Verify password
@@ -113,7 +118,10 @@ authRoutes.openapi(
         return c.json({ message: "Password is incorrect" }, 400);
       }
 
-      const isPasswordCorrect = await verifyPassword(loginUser.password, user?.password?.hash);
+      const isPasswordCorrect = await verifyPassword(
+        loginUser.password,
+        user?.password?.hash
+      );
       if (!isPasswordCorrect) {
         return c.json({ message: "Password is incorrect" }, 400);
       }

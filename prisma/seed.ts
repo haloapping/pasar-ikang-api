@@ -65,7 +65,7 @@ async function seedUsers() {
 }
 
 async function main() {
-  await seedUsers();
+  // await seedUsers();
   await seedProducts();
 }
 
