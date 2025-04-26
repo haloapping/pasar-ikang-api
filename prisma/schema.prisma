@@ -25,6 +25,7 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Cart      Cart[]
 }
 
 model Password {
@@ -56,9 +57,10 @@ model Product {
 }
 
 model Cart {
-  id        String     @id @default(ulid())
-  userId    String     @unique
-  cartItems CartItem[]
+  id     String     @id @default(ulid())
+  user   User       @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  userId String
+  items  CartItem[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -66,13 +68,12 @@ model Cart {
 
 model CartItem {
   id        String  @id @default(ulid())
-  cartId    String
-  Cart      Cart    @relation(fields: [cartId], references: [userId])
+  product   Product @relation(fields: [productId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   productId String
-  product   Product @relation(fields: [productId], references: [id])
+  cart      Cart    @relation(fields: [cartId], references: [id])
+  cartId    String
 
-  quantity    Int
-  isProcessed Boolean?
+  quantity Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
