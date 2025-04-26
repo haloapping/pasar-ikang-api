@@ -18,7 +18,6 @@ export const CreateCartSchema = CartSchema.omit({
 export const UpdateCartSchema = CreateCartSchema.partial().strict();
 
 export const AddToCartSchema = z.object({
-  userId: z.string().ulid(),
   productId: z.string().ulid(),
   quantity: z.number(),
 });
