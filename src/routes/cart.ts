@@ -12,7 +12,7 @@ cartRoutes.openapi(
     operationId: "Get cart by user id",
     summary: "Get cart by user id",
     description: "Get cart by user id",
-    tags: ["carts"],
+    tags: ["cart"],
     middleware: checkAuthorized,
     request: {
       headers: z.object({
@@ -68,7 +68,7 @@ cartRoutes.openapi(
     operationId: "Add cart item",
     summary: "Add cart item",
     description: "Add cart item",
-    tags: ["carts"],
+    tags: ["cart"],
     request: {
       headers: z.object({
         Authorization: z

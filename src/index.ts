@@ -24,14 +24,20 @@ const apiRoutes = app.basePath("/");
 apiRoutes.route("/auth", authRoutes);
 apiRoutes.route("/users", userRoutes);
 apiRoutes.route("/products", productRoutes);
-apiRoutes.route("/carts", cartRoutes);
+apiRoutes.route("/cart", cartRoutes);
 
 apiRoutes
   .doc(configDocs.openapi, {
     openapi: "3.1.0",
     info: { ...configGeneral, version: "v1" },
   })
-  .get("/", scalarHonoApiReference({ pageTitle: "Pasar Ikang API", url: "/openapi.json" }))
+  .get(
+    "/",
+    scalarHonoApiReference({
+      pageTitle: "Pasar Ikang API",
+      url: "/openapi.json",
+    })
+  )
   .onError((err, c) => {
     return c.json({ code: 400, status: "error", message: err.message }, 400);
   });
