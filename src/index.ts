@@ -2,13 +2,13 @@ import { OpenAPIHono } from "@hono/zod-openapi";
 import { apiReference as scalarHonoApiReference } from "@scalar/hono-api-reference";
 import * as Sentry from "@sentry/bun";
 import { cors } from "hono/cors";
+import { jwt } from "hono/jwt";
 import { logger } from "hono/logger";
 import { configDocs, configGeneral } from "./configs/app";
 import { authRoutes } from "./routes/auth";
 import { cartRoutes } from "./routes/cart";
 import { productRoutes } from "./routes/product";
 import { userRoutes } from "./routes/user";
-import { jwt } from "hono/jwt";
 
 const app = new OpenAPIHono();
 app.use(cors());
@@ -20,13 +20,13 @@ app.use(
   })
 );
 
-const apiRoutes = app.basePath("/");
-apiRoutes.route("/auth", authRoutes);
-apiRoutes.route("/users", userRoutes);
-apiRoutes.route("/products", productRoutes);
-apiRoutes.route("/cart", cartRoutes);
+app.basePath("/");
+app.route("/auth", authRoutes);
+app.route("/users", userRoutes);
+app.route("/products", productRoutes);
+app.route("/cart", cartRoutes);
 
-apiRoutes
+app
   .doc(configDocs.openapi, {
     openapi: "3.1.0",
     info: { ...configGeneral, version: "v1" },
@@ -44,7 +44,7 @@ apiRoutes
 
 console.info("🐟️ Pasar Ikang Backend API");
 
-export type ApiRoutes = typeof apiRoutes;
+export type ApiRoutes = typeof app;
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
